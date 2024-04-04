@@ -1,25 +1,28 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { Provider } from "react-redux";
-import store from "./store/store";
+import ProductsListAPI from "./components/ProductsListAPI";
+
+import { AppBar, Toolbar, Typography, Container } from "@mui/material";
 
 function App() {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("https://fakestoreapi.com/products");
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  return <Provider store={store}></Provider>;
+  return (
+    <div>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6">upsilon-test-app</Typography>
+        </Toolbar>
+      </AppBar>
+      <Container>
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          sx={{ marginTop: "20px" }}
+        >
+          Products
+        </Typography>
+        <ProductsListAPI />
+      </Container>
+    </div>
+  );
 }
 
 export default App;
