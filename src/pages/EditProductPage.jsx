@@ -1,55 +1,61 @@
-import React from "react";
-import { Button, FormControlLabel, Switch, TextField } from "@mui/material";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { addFormData } from "../store/ProductsFormSlice";
-import { v4 as uuidv4 } from "uuid";
-import { useNavigate } from "react-router-dom";
+import { Button, Switch, FormControlLabel, TextField } from "@mui/material";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import { updateFormData } from "../store/ProductsFormSlice";
+import { useParams, useNavigate } from "react-router-dom";
 
-function CreateProductPage() {
+function EditProductPage() {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const formDataList = useSelector((state) => state.form.formDataList);
+  const product = formDataList.find((item) => item.id === id);
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+  const [initialValues, setInitialValues] = useState({
+    name: "",
+    price: "",
+    description: "",
+    published: false,
+  });
+
+  useEffect(() => {
+    if (product) {
+      setInitialValues({
+        name: product.name,
+        price: product.price,
+        description: product.description,
+        published: product.published,
+      });
+    }
+  }, [product]);
+
+  const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const product = { ...values, id: uuidv4() };
-      const response = await axios.post(
-        "https://fakestoreapi.com/products",
-        product
-      );
-      console.log("Product created successfully:", response.data);
-      resetForm();
-      dispatch(addFormData(product));
+      const updatedProduct = { ...values, id: product.id };
+      await fetch(`https://fakestoreapi.com/products/${product.id}`, {
+        method: "PUT",
+        body: JSON.stringify(updatedProduct),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      dispatch(updateFormData(updatedProduct));
       navigate("/products");
     } catch (error) {
-      console.error("Error creating product:", error);
+      console.error("Error updating product:", error);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const validatePrice = (value) => {
-    let error;
-    if (!value) {
-      error = "Required";
-    } else if (isNaN(value)) {
-      error = "Must be a number";
-    }
-    return error;
-  };
-
   return (
     <div style={{ maxWidth: "500px", margin: "auto", padding: "20px" }}>
-      <h2>Create Product</h2>
+      <h2>Edit Product</h2>
       <Formik
-        initialValues={{
-          name: "",
-          price: "",
-          description: "",
-          published: false,
-          createdAt: new Date().toISOString(),
-        }}
+        initialValues={initialValues}
+        enableReinitialize
         onSubmit={handleSubmit}
         validate={(values) => {
           const errors = {};
@@ -58,8 +64,6 @@ function CreateProductPage() {
           }
           if (!values.price) {
             errors.price = "Required";
-          } else if (isNaN(values.price)) {
-            errors.price = "Must be a number";
           }
           if (!values.description) {
             errors.description = "Required";
@@ -90,7 +94,6 @@ function CreateProductPage() {
               fullWidth
               required
               margin="normal"
-              validate={validatePrice}
             />
             <ErrorMessage
               name="price"
@@ -124,14 +127,8 @@ function CreateProductPage() {
               color="primary"
               style={{ marginTop: "20px" }}
             >
-              Create
+              Save Changes
             </Button>
-
-            <ErrorMessage
-              name="submit"
-              component="div"
-              style={{ color: "red" }}
-            />
           </Form>
         )}
       </Formik>
@@ -139,4 +136,4 @@ function CreateProductPage() {
   );
 }
 
-export default CreateProductPage;
+export default EditProductPage;

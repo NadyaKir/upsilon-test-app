@@ -8,6 +8,8 @@ import {
   CardMedia,
   Typography,
   Button,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 
 export default function ProductsListAPI() {
@@ -27,7 +29,18 @@ export default function ProductsListAPI() {
   };
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (status === "failed") {
@@ -44,20 +57,31 @@ export default function ProductsListAPI() {
             >
               <CardMedia
                 component="img"
-                height="140"
+                height="200"
                 image={product.image}
                 alt={product.title}
+                sx={{ objectFit: "contain" }}
               />
-              <CardContent sx={{ flexGrow: 1 }}>
+              <CardContent
+                sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}
+              >
                 <Typography gutterBottom component="div">
                   {product.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {product.price}
-                </Typography>
-                <Button variant="contained" href={`/products/${product.id}`}>
-                  View Product
-                </Button>
+
+                <div style={{ marginTop: "auto" }}>
+                  <Typography
+                    variant="body2"
+                    color="text.first"
+                    noWrap
+                    sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+                  >
+                    {product.price}$
+                  </Typography>
+                  <Button variant="contained" href={`/products/${product.id}`}>
+                    View Product
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </Grid>

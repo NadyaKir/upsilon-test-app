@@ -3,11 +3,13 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts } from "../store/ProductsAPISlice";
 import {
+  Box,
   Typography,
   Card,
-  CardContent,
+  CircularProgress,
   CardMedia,
   Button,
+  Container,
 } from "@mui/material";
 
 function ProductPage() {
@@ -22,7 +24,18 @@ function ProductPage() {
   }, [dispatch]);
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (status === "failed") {
@@ -36,23 +49,23 @@ function ProductPage() {
   }
 
   return (
-    <div>
+    <Container maxWidth="md">
       <Typography variant="h3" gutterBottom>
-        Title: {product.title}
+        {product.title}
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Description: {product.description}
+        {product.description}
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Price: {product.price}
+        Price: {product.price}$
       </Typography>
-      <Card sx={{ maxWidth: 400 }}>
+      <Card sx={{ maxWidth: 400, marginBottom: 2 }}>
         <CardMedia component="img" image={product.image} alt={product.title} />
       </Card>
       <Button href={`/products`} variant="contained">
         Back to Products
       </Button>
-    </div>
+    </Container>
   );
 }
 

@@ -1,27 +1,27 @@
-import ProductsListAPI from "./components/ProductsListAPI";
+import { Container } from "@mui/material";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import { AppBar, Toolbar, Typography, Container } from "@mui/material";
+import Navbar from "./components/Navbar";
+import HomePage from "./pages/HomePage";
+import CreateProductPage from "./pages/CreateProductPage";
+import ProductsPage from "./pages/ProductsPage";
+import ProductPage from "./pages/ProductPage";
+import EditProductPage from "./pages/EditProductPage";
 
 function App() {
   return (
-    <div>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6">upsilon-test-app</Typography>
-        </Toolbar>
-      </AppBar>
-      <Container>
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          sx={{ marginTop: "20px" }}
-        >
-          Products
-        </Typography>
-        <ProductsListAPI />
+    <Router>
+      <Navbar />
+      <Container maxWidth="lg" style={{ height: "100vh" }}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/create" element={<CreateProductPage />} />
+          <Route path="/products/:id" element={<ProductPage />} />
+          <Route path="/products/:id/edit" element={<EditProductPage />} />
+        </Routes>
       </Container>
-    </div>
+    </Router>
   );
 }
 
