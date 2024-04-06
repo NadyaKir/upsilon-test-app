@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  TextField,
 } from "@mui/material";
 import { deleteFormData } from "../store/ProductsFormSlice";
 
@@ -29,6 +30,7 @@ export default function ProductsListForm() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState(null);
   const [showPublished, setShowPublished] = useState(false);
+  const [filterText, setFilterText] = useState("");
 
   const handleDelete = () => {
     if (productIdToDelete) {
@@ -63,15 +65,9 @@ export default function ProductsListForm() {
     return date.toLocaleString();
   };
 
-  const filterProducts = (product) => {
-    if (showPublished) {
-      return product.published;
-    } else {
-      return true;
-    }
-  };
-
-  const publishedProducts = formDataList.filter(filterProducts);
+  const filteredProducts = formDataList.filter((product) =>
+    product.name.toLowerCase().includes(filterText.toLowerCase())
+  );
 
   return (
     <div>
@@ -98,6 +94,15 @@ export default function ProductsListForm() {
         </Button>
       </div>
 
+      <TextField
+        type="text"
+        value={filterText}
+        onChange={(e) => setFilterText(e.target.value)}
+        placeholder="Search products..."
+        margin="normal"
+        InputProps={{ sx: { height: "40px" } }}
+      />
+
       {formDataList.length === 0 ? (
         <div
           style={{
@@ -110,7 +115,7 @@ export default function ProductsListForm() {
             No products found
           </Typography>
         </div>
-      ) : publishedProducts.length === 0 ? (
+      ) : filteredProducts.length === 0 ? (
         <div
           style={{
             display: "flex",
@@ -119,7 +124,7 @@ export default function ProductsListForm() {
           }}
         >
           <Typography variant="body1" color="text.secondary">
-            No published products found
+            No products found with the current filter
           </Typography>
         </div>
       ) : (
@@ -137,7 +142,7 @@ export default function ProductsListForm() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {publishedProducts.map((product) => (
+              {filteredProducts.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell>{product.name}</TableCell>
                   <TableCell>{product.price}</TableCell>

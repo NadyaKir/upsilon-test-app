@@ -33,7 +33,11 @@ function EditProductPage() {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const updatedProduct = { ...values, id: product.id };
+      const updatedProduct = {
+        ...values,
+        id: product.id,
+        createdAt: product.createdAt,
+      };
       await fetch(`https://fakestoreapi.com/products/${product.id}`, {
         method: "PUT",
         body: JSON.stringify(updatedProduct),

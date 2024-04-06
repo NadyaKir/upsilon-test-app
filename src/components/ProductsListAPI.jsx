@@ -8,9 +8,10 @@ import {
   CardMedia,
   Typography,
   Button,
-  CircularProgress,
-  Box,
+  TextField,
 } from "@mui/material";
+
+import Loader from "./Loader";
 
 export default function ProductsListAPI() {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ export default function ProductsListAPI() {
   const error = useSelector((state) => state.products.error);
 
   const [productsCount, setProductsCount] = useState(8);
+  const [filterText, setFilterText] = useState("");
 
   useEffect(() => {
     dispatch(fetchProducts(productsCount));
@@ -28,19 +30,16 @@ export default function ProductsListAPI() {
     setProductsCount(count);
   };
 
+  const handleFilterChange = (e) => {
+    setFilterText(e.target.value);
+  };
+
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(filterText.toLowerCase())
+  );
+
   if (status === "loading") {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <Loader />;
   }
 
   if (status === "failed") {
@@ -49,8 +48,16 @@ export default function ProductsListAPI() {
 
   return (
     <div>
+      <TextField
+        type="text"
+        value={filterText}
+        onChange={(e) => setFilterText(e.target.value)}
+        placeholder="Search products..."
+        margin="normal"
+        InputProps={{ sx: { height: "40px" } }}
+      />
       <Grid container spacing={2}>
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
             <Card
               sx={{ display: "flex", flexDirection: "column", height: "100%" }}

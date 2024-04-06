@@ -2,15 +2,9 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts } from "../store/ProductsAPISlice";
-import {
-  Box,
-  Typography,
-  Card,
-  CircularProgress,
-  CardMedia,
-  Button,
-  Container,
-} from "@mui/material";
+import { Typography, Card, CardMedia, Button, Container } from "@mui/material";
+
+import Loader from "../components/Loader";
 
 function ProductPage() {
   const { id } = useParams();
@@ -24,18 +18,7 @@ function ProductPage() {
   }, [dispatch]);
 
   if (status === "loading") {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <Loader />;
   }
 
   if (status === "failed") {
@@ -49,7 +32,7 @@ function ProductPage() {
   }
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" sx={{ marginTop: 4, marginBottom: 4 }}>
       <Typography variant="h3" gutterBottom>
         {product.title}
       </Typography>

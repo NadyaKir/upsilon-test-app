@@ -21,14 +21,14 @@ export default function ProductsPage() {
         Products Page
       </Typography>
       <Tabs value={selectedTab} onChange={handleTabChange} centered>
-        <Tab label="API List" />
         <Tab label="Form List" />
+        <Tab label="API List" />
       </Tabs>
       <TabPanel value={selectedTab} index={0}>
-        <ProductsListAPI />
+        <ProductsListForm />
       </TabPanel>
       <TabPanel value={selectedTab} index={1}>
-        <ProductsListForm />
+        <ProductsListAPI />
       </TabPanel>
     </div>
   );
