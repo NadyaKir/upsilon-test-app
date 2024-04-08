@@ -12,7 +12,7 @@ function App() {
   return (
     <Router>
       <Navbar />
-      <Container maxWidth="lg" style={{ height: "100vh" }}>
+      <Container maxWidth="lg">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/products" element={<ProductsPage />} />
