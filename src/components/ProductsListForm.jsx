@@ -65,9 +65,19 @@ export default function ProductsListForm() {
     return date.toLocaleString();
   };
 
-  const filteredProducts = formDataList.filter((product) =>
-    product.name.toLowerCase().includes(filterText.toLowerCase())
-  );
+  const filterProducts = (product) => {
+    if (showPublished) {
+      return product.published;
+    } else {
+      return true;
+    }
+  };
+
+  const filteredProducts = formDataList
+    .filter((product) =>
+      product.name.toLowerCase().includes(filterText.toLowerCase())
+    )
+    .filter(filterProducts);
 
   return (
     <div>
